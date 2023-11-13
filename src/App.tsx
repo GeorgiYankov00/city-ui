@@ -13,25 +13,10 @@ import {
   getQueryFilterParams,
   getQuerySortParams,
 } from "./utils/getQueryParams.function";
-import CityForm from "./CreateCityForm";
-import { CityCreate } from "./utils/CityCreate.type";
-
-const columns: GridColDef[] = [
-  { field: "name", headerName: "City", flex: 1 },
-  { field: "area", headerName: "Area", flex: 1 },
-  {
-    field: "population",
-    headerName: "Population",
-    flex: 1,
-    renderCell: (params) => {
-      if (params.value >= HIGH_POPULATION) {
-        return <strong>{params.value}</strong>;
-      }
-      return params.value;
-    },
-  },
-  { field: "density", headerName: "Density", flex: 1 },
-];
+import CityForm from "./components/CreateCityForm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 export default function App() {
   const [rows, setRows] = useState<GridRowsProp>([]);
@@ -42,6 +27,23 @@ export default function App() {
     quickFilterValues: [],
   });
 
+  const columns: GridColDef[] = [
+    { field: "name", headerName: "City", flex: 1 },
+    { field: "area", headerName: "Area", flex: 1 },
+    {
+      field: "population",
+      headerName: "Population",
+      flex: 1,
+      renderCell: (params) => {
+        if (params.value > HIGH_POPULATION) {
+          return <strong>{params.value}</strong>;
+        }
+        return params.value;
+      },
+    },
+    { field: "density", headerName: "Density", flex: 1 },
+  ];
+
   const fetchData = useCallback(() => {
     setIsLoading(true);
 
@@ -50,11 +52,17 @@ export default function App() {
       getQuerySortParams(sortModel) +
       getQueryFilterParams(filterModel);
 
-    fetch(queryUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        setRows(data);
+    axios
+      .get(queryUrl)
+      .then((response) => {
+        setRows(response.data);
         setIsLoading(false);
+      })
+      .catch((err) => {
+        toast.error(
+          "An error occurred while fetching the cities. " +
+            err?.response?.data?.error
+        );
       });
   }, [sortModel, filterModel]);
 
@@ -62,28 +70,9 @@ export default function App() {
     fetchData();
   }, [fetchData]);
 
-  const handleCreateCity = (newCityData: CityCreate) => {
-    console.log("New city data:", JSON.stringify(newCityData));
-
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newCityData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        fetchData();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   return (
     <Box sx={{ height: 500, width: 1 }}>
+      <ToastContainer />
       <DataGrid
         sx={{ m: 2 }}
         rows={rows}
@@ -103,7 +92,7 @@ export default function App() {
         onFilterModelChange={(model) => setFilterModel(model)}
       />
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <CityForm onCreateCity={handleCreateCity} />
+        <CityForm />
       </Box>
     </Box>
   );
