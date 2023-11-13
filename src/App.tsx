@@ -13,6 +13,8 @@ import {
   getQueryFilterParams,
   getQuerySortParams,
 } from "./utils/getQueryParams.function";
+import CityForm from "./CreateCityForm";
+import { CityCreate } from "./utils/CityCreate.type";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "City", flex: 1 },
@@ -60,9 +62,30 @@ export default function App() {
     fetchData();
   }, [fetchData]);
 
+  const handleCreateCity = (newCityData: CityCreate) => {
+    console.log("New city data:", JSON.stringify(newCityData));
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCityData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        fetchData();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <Box sx={{ height: 500, width: 1 }}>
       <DataGrid
+        sx={{ m: 2 }}
         rows={rows}
         columns={columns}
         loading={isLoading}
@@ -70,6 +93,7 @@ export default function App() {
         onSortModelChange={(model) => setSortModel(model)}
         slots={{ toolbar: GridToolbar }}
         disableColumnFilter
+        disableRowSelectionOnClick
         slotProps={{
           toolbar: {
             showQuickFilter: true,
@@ -78,6 +102,9 @@ export default function App() {
         filterMode="server"
         onFilterModelChange={(model) => setFilterModel(model)}
       />
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <CityForm onCreateCity={handleCreateCity} />
+      </Box>
     </Box>
   );
 }
