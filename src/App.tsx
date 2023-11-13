@@ -3,11 +3,16 @@ import {
   GridRowsProp,
   GridColDef,
   GridSortModel,
+  GridToolbar,
+  GridFilterModel,
 } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
 import { API_URL, HIGH_POPULATION } from "./utils/const";
 import { Box } from "@mui/material";
-import { maxHeight } from "@mui/system";
+import {
+  getQueryFilterParams,
+  getQuerySortParams,
+} from "./utils/getQueryParams.function";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "City", flex: 1 },
@@ -30,19 +35,18 @@ export default function App() {
   const [rows, setRows] = useState<GridRowsProp>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({
+    items: [],
+    quickFilterValues: [],
+  });
 
   const fetchData = useCallback(() => {
     setIsLoading(true);
 
-    let queryUrl = API_URL;
-
-    //to do extract into
-    if (sortModel.length > 0) {
-      const sortField = sortModel[0].field;
-      const sortOrder = sortModel[0].sort === "asc" ? "" : "-";
-      const sortParam = `${sortOrder}${sortField}`;
-      queryUrl += `?sort=${sortParam}`;
-    }
+    const queryUrl =
+      API_URL +
+      getQuerySortParams(sortModel) +
+      getQueryFilterParams(filterModel);
 
     fetch(queryUrl)
       .then((response) => response.json())
@@ -50,7 +54,7 @@ export default function App() {
         setRows(data);
         setIsLoading(false);
       });
-  }, [sortModel]);
+  }, [sortModel, filterModel]);
 
   useEffect(() => {
     fetchData();
@@ -61,9 +65,18 @@ export default function App() {
       <DataGrid
         rows={rows}
         columns={columns}
+        loading={isLoading}
         sortModel={sortModel}
         onSortModelChange={(model) => setSortModel(model)}
-        loading={isLoading}
+        slots={{ toolbar: GridToolbar }}
+        disableColumnFilter
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
+        filterMode="server"
+        onFilterModelChange={(model) => setFilterModel(model)}
       />
     </Box>
   );
