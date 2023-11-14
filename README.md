@@ -32,7 +32,7 @@ Make sure you have Node.js and npm installed on your machine.
 
 # Clone Repository
 ```bash
-git clone https://github.com/your-username/city-ui-app.git
+git clone https://github.com/GeorgiYankov00/city-ui.git
 ```
 
 # Navigate to the project directory:
