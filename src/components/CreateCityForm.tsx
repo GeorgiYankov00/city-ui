@@ -10,6 +10,10 @@ const CityForm = () => {
       .post(API_URL, newCityData)
       .then(() => {
         //reload
+        setName("");
+        setArea("");
+        setPopulation("");
+
         toast.success("City created successfully!");
       })
       .catch((err) => {
@@ -21,8 +25,8 @@ const CityForm = () => {
   };
 
   const [name, setName] = useState("");
-  const [area, setArea] = useState("");
-  const [population, setPopulation] = useState("");
+  const [area, setArea] = useState<number | "">("");
+  const [population, setPopulation] = useState<number | "">("");
   const isDisabled = !name || !area || !population;
 
   const handleSubmit = (event: any) => {
@@ -64,7 +68,10 @@ const CityForm = () => {
               variant="outlined"
               value={area}
               required
-              onChange={(e) => setArea(e.target.value)}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setArea(isNaN(value) ? "" : value);
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -74,7 +81,10 @@ const CityForm = () => {
               type="number"
               value={population}
               required
-              onChange={(e) => setPopulation(e.target.value)}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setPopulation(isNaN(value) ? "" : value);
+              }}
             />
           </Grid>
           <Grid item xs={3}>
