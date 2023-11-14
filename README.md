@@ -1,6 +1,19 @@
-# Getting Started with Create React App
+# City UI Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React application, built with Material-UI (MUI), serves as a user interface for managing city data. The application features a single-page layout with a responsive design, showcasing a table populated with city information, such as name, area, population, and density, obtained via a REST API (https://github.com/GeorgiYankov00/city-api). The UI supports the following functionalities:
+* Filter cities by a partial name or full name
+* Perform server-side pagination and sorting
+* Create new city
+* Enable/Disable columns from the supported ones - name, area, population, and density
+* Adjust row density
+* Export filtered data into a CSV file
+* Present the total count of cities loaded into the system
+
+
+# Project Architecture:
+
+![SAP_City](https://github.com/GeorgiYankov00/city-ui/assets/62720096/ed413fe6-7531-4a64-a318-09cd6eb6e1c0)
+
 
 ## Available Scripts
 
@@ -11,36 +24,32 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Getting Started
+Prerequisites
+Make sure you have Node.js and npm installed on your machine.
 
-### `npm test`
+## Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Clone Repository
+```bash
+git clone https://github.com/your-username/city-ui-app.git
+```
 
-### `npm run build`
+# Navigate to the project directory:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd city-ui-app
+```
+# Install dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Run the application in development mode:
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Open http://localhost:3000 in your browser to view the application. The page will reload if you make edits, and any lint errors will be displayed in the console.
