@@ -5,12 +5,19 @@ import {
   GridSortModel,
   GridToolbar,
   GridFilterModel,
+  GridPaginationModel,
 } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
-import { API_URL, HIGH_POPULATION } from "./utils/const";
+import {
+  API_URL,
+  DEFAULT_PAGE_NUMBER,
+  DEFAULT_PAGE_SIZE,
+  HIGH_POPULATION,
+} from "./utils/const";
 import { Box } from "@mui/material";
 import {
   getQueryFilterParams,
+  getQueryPaginationParams,
   getQuerySortParams,
 } from "./utils/getQueryParams.function";
 import CityForm from "./components/CreateCityForm";
@@ -27,6 +34,11 @@ export default function App() {
     items: [],
     quickFilterValues: [],
   });
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: DEFAULT_PAGE_NUMBER,
+    pageSize: DEFAULT_PAGE_SIZE,
+  });
+  const [rowCount, setRowCount] = useState(0);
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "City", flex: 1 },
@@ -47,17 +59,18 @@ export default function App() {
 
   const fetchData = useCallback(() => {
     setIsLoading(true);
-
     const queryUrl =
       API_URL +
       getQuerySortParams(sortModel) +
-      getQueryFilterParams(filterModel);
+      getQueryFilterParams(filterModel) +
+      getQueryPaginationParams(paginationModel);
 
     axios
       .get(queryUrl)
       .then((response) => {
         setRows(response.data);
         setIsLoading(false);
+        setRowCount(Number(response.headers?.["x-total-count"]) || 0);
       })
       .catch((err) => {
         toast.error(
@@ -65,14 +78,14 @@ export default function App() {
             err?.response?.data?.error
         );
       });
-  }, [sortModel, filterModel]);
+  }, [sortModel, filterModel, paginationModel]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData, triggerFetch]);
 
   return (
-    <Box sx={{ height: 500, width: 1 }}>
+    <Box>
       <ToastContainer />
       <DataGrid
         sx={{ m: 2 }}
@@ -91,6 +104,11 @@ export default function App() {
         }}
         filterMode="server"
         onFilterModelChange={(model) => setFilterModel(model)}
+        rowCount={rowCount}
+        pageSizeOptions={[10, 20, 50]}
+        paginationMode="server"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
       />
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <CityForm
