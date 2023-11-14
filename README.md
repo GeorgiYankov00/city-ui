@@ -12,7 +12,7 @@ This React application, built with Material-UI (MUI), serves as a user interface
 
 # Project Architecture:
 
-![SAP_City](https://github.com/GeorgiYankov00/city-ui/assets/62720096/ed413fe6-7531-4a64-a318-09cd6eb6e1c0)
+![City Web App](https://github.com/GeorgiYankov00/city-ui/blob/main/design/City%20Web%20App.png)
 
 
 ## Available Scripts
