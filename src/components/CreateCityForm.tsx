@@ -4,16 +4,17 @@ import { API_URL } from "../utils/const";
 import { CityCreate } from "../utils/types/City.type";
 import { toast } from "react-toastify";
 import axios from "axios";
-const CityForm = () => {
+import { CreateCityFormProps } from "../utils/types/CreateCityForm.interface";
+
+const CreateCityForm: React.FC<CreateCityFormProps> = ({ triggerFetch }) => {
   const handleCreateCity = (newCityData: CityCreate) => {
     axios
       .post(API_URL, newCityData)
       .then(() => {
-        //reload
         setName("");
         setArea("");
         setPopulation("");
-
+        triggerFetch();
         toast.success("City created successfully!");
       })
       .catch((err) => {
@@ -103,4 +104,4 @@ const CityForm = () => {
   );
 };
 
-export default CityForm;
+export default CreateCityForm;

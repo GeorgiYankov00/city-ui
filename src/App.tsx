@@ -20,6 +20,7 @@ import axios from "axios";
 
 export default function App() {
   const [rows, setRows] = useState<GridRowsProp>([]);
+  const [triggerFetch, setTriggerFetch] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
@@ -68,7 +69,7 @@ export default function App() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, triggerFetch]);
 
   return (
     <Box sx={{ height: 500, width: 1 }}>
@@ -92,7 +93,11 @@ export default function App() {
         onFilterModelChange={(model) => setFilterModel(model)}
       />
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <CityForm />
+        <CityForm
+          triggerFetch={() => {
+            setTriggerFetch(!triggerFetch);
+          }}
+        />
       </Box>
     </Box>
   );
